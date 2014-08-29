@@ -1,6 +1,6 @@
 /*
-Theme Name: Independent Publisher Child
-Theme URI: http://independentpublisher.net/wp-theme/
+Theme Name: Independent Publisher Child Theme
+Theme URI: http://independentpublisher.me/
 Author: Raam Dev
 Author URI: http://raamdev.com
 Description: A clean minimal theme for independent publishers. Ideal for single-author blogs.
@@ -23,63 +23,290 @@ and Blueprint http://www.blueprintcss.org/
 -------------------------------------------------------------- */
 @import url('../independent-publisher/style.css');
 
-/* =Theme customization starts here
+/* =Theme customization starts here. Add your own custom styles.
 -------------------------------------------------------------- */
 
-/**
- * Contains CSS for modifying plugin styles
- */
+/* Uncomment this style definition to hide the green bar on Quote Formatted posts: */
 
-
-/* Custom styles for the Snazzy Archives plugin */
-.sz_year {
-	font-size: 15px !important;
+/*
+.format-quote blockquote {
+	border-left: none;
+	padding-left: 0;
 }
+*/
 
-.sz_excerpt {
-	display: none;
+/* Uncomment this style definition to use the original, Mac-specific font stack */
+
+/*
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.pinglist,
+#taglist,
+.comment-form-author label,
+.comment-form-email label,
+.comment-form-url label,
+.comment-form-comment label,
+.comment-form-subscriptions label,
+.comment-form-reply-title {
+	font-family: "Myriad Pro","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
 }
+*/
 
-.sz_title {
-	font-weight: normal !important;
-	font-size: 12px !important;
-}
+/* Uncomment this style definition to use a long dash in ```<cite>```: */
 
-.snazzy a {
-	display: block;
-}
-
-.snazzy a:visited {
-	color: #444 !important;
-}
-
-.snazzy a:hover {
-	color: #57ad68 !important;
-}
-
-.sz_img {
-	height: inherit !important;
-	line-height: 18px !important;
-}
-
-.sz_clr {
-	padding-top: 10px !important;
-}
-
-/* Journal Subscription Option styles */
-
-.subscription-options-option {
-	float: left;
-	margin-right: 20px;
-}
-
-#journal-notice {
-	background: #eee;
-	padding: 30px 30px 10px 30px;
-	border-radius: 5px;
-	margin-bottom: 20px;
-}
-
+/*
 blockquote cite:before {
-	content: "";
+content: "\2014 \0020";
+}
+*/
+html {
+    height: 100%;
+    max-height: 100%;
+    font-family: Verdana, "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
+}
+
+body {
+    overflow-x: none;
+    height: 100%;
+    max-height: 100%;
+    color: #3a4145;
+    font-size: 2.4em;
+}
+
+::-moz-selection {
+    color: #222;
+    background: #d6edff;
+    text-shadow: none;
+}
+
+::selection {
+    color: #222;
+    background: #d6edff;
+    text-shadow: none;
+}
+
+.single-column-layout .site-navigation {
+    border: none;
+}
+
+.vertical {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.inner {
+    width: 80%;
+    max-width: 710px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.blog-title {
+    margin: 10px 0 10px 0;
+    font-size: 5rem;
+    letter-spacing: -1px;
+    font-weight: 700;
+    font-family: "Open Sans",sans-serif;
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .1);
+    -webkit-animation: fade-in-down 0.6s;
+    animation: fade-in-down 0.6s;
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+.blog-description {
+    margin: 0;
+    font-size: 2rem;
+    line-height: 1.5em;
+    font-weight: 400;
+    font-family: "Noto Serif",serif;
+    letter-spacing: 0;
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+    -webkit-animation: fade-in-down 0.9s;
+    animation: fade-in-down 0.9s;
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
+.site-header:before,
+.site-header:after,
+.clearfix:before, 
+.clearfix:after {
+    display: table;
+    content: '';
+}
+
+.site-header:after,
+.clearfix:after {
+    clear: both;
+}
+
+.site-head {
+    position: relative;
+    display: table !important;
+    width: 100%;
+    height: auto;
+    margin-bottom: 5rem;
+    text-align: center;
+    color: #fff;
+    border-bottom: #ebf2f6 1px solid;
+    background: #303538 no-repeat center center;
+    background-size: cover;
+}
+
+.site-head.full-height {
+    height: 100%;
+}
+
+.site-head:after {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    display: block;
+    width: 7px;
+    height: 7px;
+    margin-left: -5px;
+    content: '';
+    border: #e7eef2 1px solid;
+    -webkit-border-radius: 100%;
+       -moz-border-radius: 100%;
+            border-radius: 100%;
+    background: #fff;
+    box-shadow: #fff 0 0 0 5px;
+}
+
+body.home .site-head:after {
+    z-index: -3;
+}
+
+@media only screen and (max-width: 900px) {
+    .site-head {
+        -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+                box-sizing: border-box;
+        height: auto;
+        min-height: 240px;
+        padding: 15% 0;
+    }
+    .blog-title {
+        font-size: 4rem;
+        letter-spacing: -1px;
+    }
+    .blog-description {
+        font-size: 1.7rem;
+        line-height: 1.5em;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+  .inner,
+  .pagination {
+        width: auto;
+        margin-right: 16px;
+        margin-left: 16px;
+    }
+    .site-head {
+        padding: 10% 0;
+    }
+    .blog-title {
+        font-size: 3rem;
+    }
+    .blog-description {
+        font-size: 1.5rem;
+    }
+}
+
+.blog-logo {
+    display: block;
+    float: left;
+    background: none!important;
+}
+
+.fixed-nav.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    border: none;
+    padding: 35px 40px;
+    margin: 0 0 30px 0;
+    background: -moz-linear-gradient(top,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0) 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,rgba(0,0,0,0.2)),color-stop(100%,rgba(0,0,0,0)));
+    background: -webkit-linear-gradient(top,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0) 100%);
+}
+
+.fixed-nav a {
+    color: #fff;
+    text-decoration: none;
+    cursor: auto;
+    font-family: 'Open Sans',sans-serif;
+}
+
+.fixed-nav a:hover {
+    color: #222;
+    border-color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.8);
+    transition: all 0.1s ease;
+}
+
+.subscribe-button {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    float: right;
+    height: 38px;
+    padding: 0 20px;
+    border: #fff 1px solid;
+    color: #9EABB3;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 35px;
+    border-radius: 3px;
+    transition: all ease 0.3s;
+}
+
+.subscribe-button:before {
+    font-size: 9px;
+    margin-right: 6px;
+}
+
+.subscribe-button i.fa {
+    margin-right: 5px;
+}
+
+#content:focus {
+    outline: none;
+}
+
+a.scroll-down {
+    display: block;
+    position: absolute;
+    z-index: 100;
+    bottom: 45px;
+    left: 50%;
+    margin-left: -16px;
+    width: 48px;
+    height: 48px;
+    font-size: 34px;
+    text-align: center;
+    text-decoration: none;
+    -webkit-animation: bounce 4s 2s infinite;
+    animation: bounce 4s 2s infinite;
+    transition: color ease 0.3s;
+    background: transparent;
+}
+
+a.scroll-down,
+a.scroll-down:active {
+    color: rgba(255,255,255,0.7) !important;
 }

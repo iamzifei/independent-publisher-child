@@ -1,355 +1,290 @@
 <?php
 
-/**
- * We store the RSS Journal Key in a separate file.
- * This key is used to access protected Journal entries
- * via RSS and allows us to give MailChimp an RSS URL
- * for RSS-to-Email campaigns for Journal subscribers.
+/*
+ * You can add your own functions here. You can also override functions that are
+ * called from within the parent theme. For a complete list of function you can
+ * override here, please see the docs:
+ *
+ * https://github.com/raamdev/independent-publisher#functions-you-can-override-in-a-child-theme
+ *
  */
-require_once( WP_CONTENT_DIR . '/private/rss-journal-key.php' );
+
+
+/*
+ * Uncomment the following to add a favicon to your site. You need to add favicon
+ * image to the images folder of Independent Publisher Child Theme for this to work.
+ */
+/*
+function blog_favicon() {
+  echo '<link rel="Shortcut Icon" type="image/x-icon" href="'.get_bloginfo('stylesheet_directory').'/images/favicon.ico" />' . "\n";
+}
+add_action('wp_head', 'blog_favicon');
+*/
+
+/*
+ * Add version number to main style.css file with version number that matches the
+ * last modified time of the file. This helps when making frequent changes to the
+ * CSS file as the browser will always load the newest version.
+ */
+/*
+function independent_publisher_stylesheet() {
+	wp_enqueue_style( 'independent-publisher-style', get_stylesheet_uri(), '', filemtime( get_stylesheet_directory() . '/style.css') );
+}
+*/
+
+/*
+ * Modifies the default theme footer.
+ * This also applies the changes to JetPack's Infinite Scroll footer, if you're using that module.
+ */
+/*
+function independent_publisher_footer_credits() {
+	$my_custom_footer = 'This is my custom footer.';
+	return $my_custom_footer;
+}
+*/
 
 /**
- * Returns recent posts for given category and excludes given post formats
+ * Return true if show fixed nav on home page
  */
-function raamdev_get_recent_posts( $number_posts = '10', $category = '', $exclude_formats = array() ) {
-
-	// Make sure category exists
-	if ( ! get_cat_ID( $category ) ) {
-		return FALSE;
+function independent_publisher_show_fix_nav_on_home() {
+    	$independent_publisher_general_options = get_option( 'independent_publisher_general_options' );
+	if ( isset( $independent_publisher_general_options['show_fixed_nav_menu_on_home'] ) && $independent_publisher_general_options['show_fixed_nav_menu_on_home'] ) {
+		return true;
+	} else {
+		return false;
 	}
+}
 
-	// Build array of format exclution queries
-	if ( ! empty( $exclude_formats ) ) :
-		$i         = 0;
-		$tax_query = array();
+/**
+ * Show fixed navigation menu on the home page
+ */
 
-		foreach ( $exclude_formats as $format ) {
-
-			$tax_query[$i] = array(
-				'taxonomy' => 'post_format',
-				'field'    => 'slug',
-				'terms'    => 'post-format-' . $format,
-				'operator' => 'NOT IN'
-			);
-
-			$i ++;
-		}
-	endif;
-
-	?>
-	<ul>
-		<?php
-		$args = array( 'numberposts' => $number_posts, 'category' => get_cat_ID( $category ), 'post_status' => 'publish', 'tax_query' => $tax_query );
-		$recent_posts = wp_get_recent_posts( $args );
-		foreach ( $recent_posts as $recent ) {
-			echo '<li><a href="' . get_permalink( $recent["ID"] ) . '" title="Look ' . esc_attr( $recent["post_title"] ) . '" >' . $recent["post_title"] . '</a> </li> ';
-		}
+if ( ! function_exists( 'independent_publisher_fixed_nav' ) ) :
+	/**
+	 * Outputs fixed nav for display on home page
+	 *
+	 * @since Independent Publisher 1.0
+	 */
+	function independent_publisher_fixed_nav() {
+		/**
+		 * This function gets called outside the loop (in header.php),
+		 * so we need to figure out the post author ID and Nice Name manually.
+		 */
+		global $wp_query;
+		$post_author_id = $wp_query->post->post_author;
 		?>
-	</ul>
-<?php
-}
-
-/*
- * Add Twitter handle to end of tweet text when sharing via Twitter
- */
-function indiepub_sharing_buttons_tweet_text( $tweet_text ) {
-	return $tweet_text . '%20via%20@raamdev';
-}
-
-add_filter( 'indiepub_sharing_buttons_tweet_text', 'indiepub_sharing_buttons_tweet_text' );
+                <a class="blog-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
+			<?php echo get_avatar( get_the_author_meta( 'ID', $post_author_id ), 38 ); ?>
+		</a>
+                <a class="subscribe-button icon-feed" href="<?php echo esc_url( home_url( '/' ) ); ?>rss/"><i class="fa fa-rss"></i><?php _e('Subscribe', 'independent-publisher'); ?></a>
+	<?php
+	}
+endif;
 
 /**
- * Returns true if post is more than 1 year old or user has access, otherwise returns false
+ * Overwrite the output for site info on home page header
  */
-function raamdev_is_journal_viewable() {
-	$release_after = 365 * 86400; // days * seconds per day
-	$post_age      = date( 'U' ) - get_post_time( 'U' );
-	if ( $post_age > $release_after || current_user_can( "access_s2member_level1" ) )
-		return TRUE;
-	else
-		return FALSE;
+
+if ( ! function_exists( 'independent_publisher_site_info' ) ) :
+	/**
+	 * Outputs site info for display on non-single pages
+	 *
+	 * @since Independent Publisher 1.0
+	 */
+	function independent_publisher_site_info() {
+		?>
+                    <div class="vertical">
+                        <div class="site-head-content inner">
+                            <h1 class="blog-title"><?php bloginfo( 'name' ); ?></h1>
+                            <h2 class="blog-description"><?php bloginfo( 'description' ); ?></h2>
+                        </div>
+                    </div>
+                
+		<?php get_template_part( 'menu', 'social' ); ?>
+                <a class="scroll-down animated bounce" href="#content"><i class="fa fa-angle-down fa-2x"></i></a>
+	<?php
+	}
+endif;
+
+/**
+ * Register fixed navigation menu on home page settings
+ */
+
+add_action( 'customize_register', 'independent_publisher_show_fixed_nav' );
+
+function independent_publisher_show_fixed_nav($wp_customize){
+                 // Show Nav Menu on Single Posts
+		$wp_customize->add_setting(
+					 'independent_publisher_general_options[show_fixed_nav_menu_on_home]', array(
+							 'default'    => false,
+							 'type'       => 'option',
+							 'capability' => 'edit_theme_options',
+							 'sanitize_callback' => 'independent_publisher_sanitize_checkbox',
+						 )
+		);
+		$wp_customize->add_control(
+					 'show_fixed_nav_menu_on_home', array(
+							 'settings' => 'independent_publisher_general_options[show_fixed_nav_menu_on_home]',
+							 'label'    => __( 'Show Fixed Nav Menu on Home', 'independent-publisher' ),
+							 'section'  => 'independent_publisher_general_options',
+							 'type'     => 'checkbox',
+						 )
+		);
+                
 }
 
 /**
- * Returns message about journal entry released from paywall
+ * Change default size of custom header image
  */
-function raamdev_was_journal_entry_message() {
 
-	$html = '<div style="font-size: 80%; border: 1px solid #eee; padding: 20px; margin-bottom: 20px; line-height: 1.4em; background: #eee;">This is an entry from my
-		<a href="http://raamdev.com/about/journal/">personal Journal</a> and it was published over one year ago. It was initially only available to paying subscribers. However, as per my
-		<a href="http://raamdev.com/income-ethics-series/#public_domain">Income Ethics</a>, "all non-free creative work will be made public domain within one year". So, after spending one year behind a paywall, this content is now free. Ah, sweet freedom!
-	</div>';
+function independent_publisher_custom_header_setup_mod() {
+	$args = array(
+		'default-image'          => independent_publisher_get_default_header_image(),
+		'width'                  => 2560,
+		'height'                 => 1600,
+		'flex-width'             => true,
+		'flex-height'            => true,
+		'header-text'            => false,
+		'default-text-color'     => '',
+		'wp-head-callback'       => '',
+		'admin-head-callback'    => '',
+		'admin-preview-callback' => '',
+	);
 
-	return $html;
+	$args = apply_filters( 'independent_publisher_custom_header_args', $args );
+
+	add_theme_support( 'custom-header', $args );
+
 }
 
+add_action( 'after_setup_theme', 'independent_publisher_custom_header_setup_mod' );
+
 /**
- * Returns the appropriate content when showing a Journal entry
+ * Add awesome font into head
  */
-function raamdev_the_content() {
-	if ( in_category( 'Journal' ) && raamdev_is_journal_viewable() ) {
-		if ( ! is_user_logged_in() || ! current_user_can( "access_s2member_level1" ) ) {
-			echo raamdev_was_journal_entry_message();
-			the_content();
+function independent_publisher_extra_assets() {
+    echo '<link rel="stylesheet" href="'.get_stylesheet_directory_uri().'/font-awesome/css/font-awesome.min.css">' . "\n";
+    echo '<link rel="stylesheet" href="'.get_stylesheet_directory_uri().'/css/animation.min.css">' . "\n";
+    echo '<script type="text/javascript" src="'.get_stylesheet_directory_uri().'/js/util.js"></script>' . "\n";
+}
+add_action('wp_head', 'independent_publisher_extra_assets');
+
+/**
+ * Overwrite wordcount for Chinese
+ */
+define("WORD_COUNT_MASK", "/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*/u");
+
+function str_word_count_utf8($string, $format = 0)
+{
+    $string =  $string = preg_replace("/～|！|｀|·|＃|￥|％|…|—|（|）|＋|－|＝|｛|｝|［|］|\＼|｜|“|”|’|‘|；|：|《|》|〈|〉|、|？|。|，/",' ',$string);
+    $string = preg_replace('/[\x80-\xff]{3}/', ' a ', $string);
+    switch ($format) {
+    case 1:
+        preg_match_all(WORD_COUNT_MASK, $string, $matches);
+        return $matches[0];
+    case 2:
+        preg_match_all(WORD_COUNT_MASK, $string, $matches, PREG_OFFSET_CAPTURE);
+        $result = array();
+        foreach ($matches[0] as $match) {
+            $result[$match[1]] = $match[0];
+        }
+        return $result;
+    }
+    return preg_match_all(WORD_COUNT_MASK, $string, $matches);
+}
+
+function mtw_string_wordcount($instring) {
+    if ( function_exists('str_word_count_utf8') ) {
+        return str_word_count_utf8(strip_tags($instring));
+    } else {
+        return count(explode(" ",strip_tags($instring)));
+    }
+}
+
+if ( ! function_exists( 'independent_publisher_post_word_count' ) ):
+	/**
+	 * Returns number of words in a post
+	 * @return string
+	 */
+	function independent_publisher_post_word_count() {
+		global $post;
+		$content = get_post_field( 'post_content', $post->ID );
+		$count   = mtw_string_wordcount($content);
+
+		return number_format( $count );
+	}
+endif;
+
+
+
+
+
+if ( ! function_exists( 'independent_publisher_posted_author_cats' ) ) :
+	/**
+	 * Prints HTML with meta information for the current author and post categories.
+	 *
+	 * Only prints author name when Multi-Author Mode is enabled.
+	 *
+	 * @since Independent Publisher 1.0
+	 */
+	function independent_publisher_posted_author_cats() {
+
+		/* translators: used between list items, there is a space after the comma */
+		$categories_list = get_the_category_list( __( ', ', 'independent-publisher' ) );
+
+		if ( ( ! post_password_required() && comments_open() && ! independent_publisher_hide_comments() ) || ( ! post_password_required() && independent_publisher_show_post_word_count() && ! get_post_format() ) || independent_publisher_show_date_entry_meta() ) {
+			$separator = apply_filters( 'independent_publisher_entry_meta_separator', '|' );
+		} else {
+			$separator = '';
 		}
-		else {
-			the_content();
-		}
+
+		if ( independent_publisher_is_multi_author_mode() ) :
+			if ( $categories_list && independent_publisher_categorized_blog() ) :
+				echo '<span class="cat-links">';
+				printf(
+					'<a href="%1$s" title="%2$s">%3$s</a> %4$s %5$s',
+					esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+					esc_attr( sprintf( __( 'View all posts by %s', 'independent-publisher' ), get_the_author() ) ),
+					esc_html( get_the_author() ),
+					independent_publisher_entry_meta_category_prefix(),
+					$categories_list
+				);
+				echo '</span> <span class="sep"> ' . $separator . '</span>';
+			else :
+				echo '<span class="cat-links">';
+				printf(
+					'%1$s <a href="%2$s" title="%3$s">%4$s</a>',
+					'',
+					esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+					esc_attr( sprintf( __( 'View all posts by %s', 'independent-publisher' ), get_the_author() ) ),
+					esc_html( get_the_author() )
+				);
+				echo '</span>';
+			endif; // End if categories
+		else : // not Multi-Author Mode
+			if ( $categories_list && independent_publisher_categorized_blog() ) :
+				echo '<span class="cat-links">';
+				printf(
+					'%1$s %2$s',
+					independent_publisher_entry_meta_category_prefix(),
+					$categories_list
+				);
+				echo '</span> <span class="sep"> ' . $separator . '</span>';
+			else :
+				echo '<span class="cat-links">';
+				echo '</span>';
+			endif; // End if categories
+		endif; // End if independent_publisher_is_multi_author_mode()
+                // get post tags
+                $posttags = get_the_tags();
+                if ($posttags) {
+                    $prefix = '';
+                    echo __(' on ', 'independent-publisher');
+                    foreach($posttags as $tag) {
+                        echo $prefix . '<a href="'. get_tag_link($tag->term_id).'">'.$tag->name.'</a>';
+                        $prefix = ', ';
+                    }
+                }
+                echo '<span class="sep"> ' . $separator . '</span>';
 	}
-	elseif ( in_category( 'Journal' ) && ! raamdev_is_journal_viewable() ) {
-		echo raamdev_journal_not_released_message();
-	}
-	else {
-		the_content();
-	}
-}
-
-/**
- * Returns message about journal not released yet
- */
-function raamdev_journal_not_released_message() {
-
-	$post_id = get_the_ID();
-
-	$html = '<style type="text/css">#post-' . $post_id . ' header { opacity: 0.5; }</style>';
-	$html .= '<div id="journal-notice">
-				<p>This journal entry has not been released into the public domain and is currently only available through a subscription to the
-				<a href="http://raamdev.com/about/journal/">Journal</a> or a
-				<a href="/about/journal/#one_time_donation">one-time donation</a>.</p>';
-	if ( is_user_logged_in() ) {
-		$html .= '<p>Since you\'re already logged in, you can <a href="/account/modification/">upgrade now</a> to receive access to this entry.</p>';
-	}
-	else {
-		$html .= '<p>If you have an active subscription to the Journal, please
-					<a href="https://raamdev.com/wordpress/wp-login.php">login</a> to access this entry (you may need to
-					<a href="https://raamdev.com/wordpress/wp-login.php?action=lostpassword">reset your password</a> first).
-					</p>
-					<p><a href="/subscriptions/">
-					<button>View Subscription Options</button>
-					</a></p>';
-	}
-	$html .= '</div>';
-
-	return $html;
-}
-
-/**
- * Returns message about journal not released yet
- */
-function raamdev_journal_not_released_comments_message() {
-	?>
-	<div id="journal-notice-comments">
-		<p><strong>Comments are hidden.</strong></p>
-	</div>
-<?php
-}
-
-/*
- * Hide the Twitter handle when adding mentions to posts
- * with Twitter Mentions as Comment Plugin
- */
-function tmac_hide_twitter_handle() {
-	return TRUE;
-}
-
-add_filter( 'tmac_hide_twitter_handle', 'tmac_hide_twitter_handle' );
-
-/**
- * Filter post formats from RSS feed
- */
-function raamdev_rss_filter_post_formats( &$wp_query ) {
-	if ( $wp_query->is_feed() ) {
-		if ( isset( $wp_query->query_vars['rss-post-format-aside'] ) ) { // Only return Asides and Quotes
-			$post_format_tax_query = array(
-				'taxonomy' => 'post_format',
-				'field'    => 'slug',
-				'terms'    => array('post-format-aside', 'post-format-quote'),
-				'operator' => 'IN'
-			);
-			$tax_query             = $wp_query->get( 'tax_query' );
-			if ( is_array( $tax_query ) ) {
-				$tax_query = $tax_query + $post_format_tax_query;
-			}
-			else {
-				$tax_query = array( $post_format_tax_query );
-			}
-			$wp_query->set( 'tax_query', $tax_query );
-		}
-		else if ( isset( $wp_query->query_vars['rss-post-format-image'] ) ) { // Only return Images
-
-			$post_format_tax_query = array(
-				'taxonomy' => 'post_format',
-				'field'    => 'slug',
-				'terms'    => 'post-format-image',
-				'operator' => 'IN'
-			);
-			$tax_query             = $wp_query->get( 'tax_query' );
-			if ( is_array( $tax_query ) ) {
-				$tax_query = $tax_query + $post_format_tax_query;
-			}
-			else {
-				$tax_query = array( $post_format_tax_query );
-			}
-			$wp_query->set( 'tax_query', $tax_query );
-		}
-		else if ( isset( $wp_query->query_vars['rss-post-format-standard'] ) ) { //
-
-			$post_format_tax_query = array(
-				'taxonomy' => 'post_format',
-				'field'    => 'slug',
-				'terms'    => array( 'post-format-aside', 'post-format-image', 'post-format-quote' ),
-				'operator' => 'NOT IN'
-			);
-			$tax_query             = $wp_query->get( 'tax_query' );
-			if ( is_array( $tax_query ) ) {
-				$tax_query = $tax_query + $post_format_tax_query;
-			}
-			else {
-				$tax_query = array( $post_format_tax_query );
-			}
-			$wp_query->set( 'tax_query', $tax_query );
-		}
-	}
-}
-
-add_action( 'pre_get_posts', 'raamdev_rss_filter_post_formats' );
-
-/**
- * Filter journal entries from RSS feeds, except when using secret URL
- */
-add_action( 'pre_get_posts', 'raamdev_rss_filter_journal' );
-function raamdev_rss_filter_journal( &$wp_query ) {
-
-	if ( $wp_query->is_feed() && ! isset( $wp_query->query_vars[RSS_JOURNAL_KEY] ) ) {
-		$wp_query->set( 'category__not_in', '921' );
-	}
-	else if ( $wp_query->is_feed() && isset( $wp_query->query_vars[RSS_JOURNAL_KEY] ) ) {
-		$wp_query->set( 'category__in', '921' );
-	}
-}
-
-/**
- * Query vars used for filtering RSS feeds
- */
-function raamdev_add_query_vars( $aVars ) {
-	$aVars[] = "rss-post-format-aside";
-	$aVars[] = "rss-post-format-image";
-	$aVars[] = "rss-post-format-standard";
-	$aVars[] = RSS_JOURNAL_KEY;
-	return $aVars;
-}
-
-add_filter( 'query_vars', 'raamdev_add_query_vars' );
-
-/**
- * Changes the RSS feed title to rename specific post formats
- */
-function raamdev_rss_change_title() {
-	$title = get_wp_title_rss();
-	if ( strpos( $title, "Aside" ) ) {
-		$new_title = str_replace( "Aside", "Thoughts", $title );
-		echo $new_title;
-	}
-	else {
-		echo get_wp_title_rss();
-	}
-}
-
-add_filter( 'wp_title_rss', 'raamdev_rss_change_title', 1 );
-
-/**
- * Redirect the registration form to a specific page after submission
- */
-function __my_registration_redirect() {
-	return home_url( '/please-confirm-subscription/' );
-}
-
-add_filter( 'registration_redirect', '__my_registration_redirect' );
-
-/**
- * Add custom styles for login form (brings entire form up to accommodate for custom header logo)
- */
-function raamdev_my_login_css() {
-	echo '<style type="text/css">#login { padding: 15px 0 0; margin: auto; } .login h1 a { padding-bottom: 0px; }</style>';
-}
-
-add_action( 'login_head', 'raamdev_my_login_css' );
-
-/**
- * Allow Custom MIME Types to be uploaded via WordPress Media Library
- */
-function raamdev_custom_mime_media_types( $mimes ) {
-	$mimes = array_merge( $mimes, array(
-		'epub|mobi' => 'application/octet-stream'
-	) );
-	return $mimes;
-}
-
-add_filter( 'upload_mimes', 'raamdev_custom_mime_media_types' );
-
-/**
- * Shortcode for including Static HTML Files in posts
- */
-function raamdev_sc_static_html( $atts ) {
-
-	// Extract Shortcode Parameters/Attributes
-	extract( shortcode_atts( array(
-		'subdir' => NULL,
-		'file'   => NULL
-	), $atts ) );
-
-	// Set file path
-	$path_base = ABSPATH . "wp-content/static-files/";
-	$path_file = ( $subdir == NULL ) ? $path_base . $file : $path_base . $subdir . "/" . $file;
-
-	// Load file or, if absent. throw error
-	if ( file_exists( $path_file ) ) {
-		$file_content = file_get_contents( $path_file );
-		return $file_content;
-	}
-	else {
-		trigger_error( "'$path_file' file not found", E_USER_WARNING );
-		return "FILE NOT FOUND: " . $path_file . "
-SUBDIR = " . $subdir . "
-FILE = " . $file . "
-
-";
-	}
-}
-
-add_shortcode( 'static_html', 'raamdev_sc_static_html' );
-
-/**
- * Return the full permalink instead of the shortlink.
- * Prefer the full permalink over the shortlink so the domain (raamdev.com)
- * appears in the URL when social sites pull page metadata (as opposed to
- * wp.me URLs or raamdev.com/?p=1234).
- */
-function raamdev_custom_shortlink() {
-	$permalink = get_permalink();
-	return $permalink;
-}
-
-add_filter( 'get_shortlink', 'raamdev_custom_shortlink' );
-
-/**
- * Add "My Account" and "Logout" menu items to nav menu when logged in
- *
- * @param $nav
- * @param $args
- *
- * @return string
- */
-function raamdev_logged_in_menu_items( $nav, $args ) {
-
-	if ( is_user_logged_in() && ! is_single() && $args->theme_location == 'primary' ) {
-		$nav             = $nav . '<li class="menu-item menu-space-separator">&nbsp;</li>';
-		$my_account_link = '<li class="menu-item my-account-menu-item"><a href="/account/">My Account</a></li>';
-		$nav             = $nav . $my_account_link;
-		$logout_link     = '<li class="menu-item logout-menu-item"><a href="' . wp_logout_url() . '">Logout</a></li>';
-		$nav             = $nav . $logout_link;
-	}
-	return $nav;
-}
-
-add_filter( 'wp_nav_menu_items', 'raamdev_logged_in_menu_items', 10, 2 );
+endif;
