@@ -121,6 +121,7 @@ body {
 
 .blog-description {
     margin: 0;
+    font-weight: 700 !important;
     font-size: 2rem;
     line-height: 1.5em;
     font-weight: 400;
@@ -186,6 +187,10 @@ body.home .site-head:after {
 }
 
 @media only screen and (max-width: 900px) {
+    html, body {
+        height: auto;
+    }
+    
     .site-head {
         -webkit-box-sizing: border-box;
            -moz-box-sizing: border-box;

@@ -32,16 +32,20 @@ function independent_publisher_stylesheet() {
 }
 */
 
+add_action( 'after_setup_theme', 'my_child_theme_setup' );
+function my_child_theme_setup() {
+    load_child_theme_textdomain( 'independent-publisher', get_stylesheet_directory() . '/languages' );
+}
+
 /*
  * Modifies the default theme footer.
  * This also applies the changes to JetPack's Infinite Scroll footer, if you're using that module.
  */
-/*
+
 function independent_publisher_footer_credits() {
-	$my_custom_footer = 'This is my custom footer.';
+	$my_custom_footer = _e('Days of joy, days of sadness, slowly pass me by.', 'independent-publisher');
 	return $my_custom_footer;
 }
-*/
 
 /**
  * Return true if show fixed nav on home page

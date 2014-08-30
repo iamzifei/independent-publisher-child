@@ -1,0 +1,84 @@
+# Copyright (C) 2014 Raam Dev
+# This file is distributed under the GNU GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: Independent Publisher Child Theme 1.2.4\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/theme/independent-"
+"publisher-child\n"
+"POT-Creation-Date: 2014-08-30 04:10:51+00:00\n"
+"PO-Revision-Date: 2014-08-30 14:11+1000\n"
+"Last-Translator: Zifei Gong <iamzifei@gmail.com>\n"
+"Language-Team: Orris <iamzifei@gmail.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.8\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: functions.php:41
+msgid "Days of joy, days of sadness, slowly pass me by."
+msgstr "苦中作乐"
+
+#: functions.php:78
+msgid "Subscribe"
+msgstr "订阅"
+
+#: functions.php:127
+msgid "Show Fixed Nav Menu on Home"
+msgstr "在主页显示固定内容的导航栏"
+
+#. translators: used between list items, there is a space after the comma
+#: functions.php:232
+msgid ", "
+msgstr "，"
+
+#: functions.php:246 functions.php:258
+msgid "View all posts by %s"
+msgstr "查看%s的所有文章"
+
+#: functions.php:281
+msgid " on "
+msgstr "于"
+
+#: header.php:43 header.php:48
+msgid "Skip to content"
+msgstr "前往内容"
+
+#: page-archive.php:27
+msgid "Most Used Categories"
+msgstr "最常用分类"
+
+#: page-archive.php:38
+msgid "Pages:"
+msgstr "页："
+
+#: page-archive.php:41
+msgid "Edit"
+msgstr "编辑"
+
+#. Theme Name of the plugin/theme
+msgid "Independent Publisher Child Theme"
+msgstr "Independent Publisher子主题"
+
+#. Theme URI of the plugin/theme
+msgid "http://independentpublisher.me/"
+msgstr "http://independentpublisher.me/"
+
+#. Description of the plugin/theme
+msgid ""
+"A clean minimal theme for independent publishers. Ideal for single-author "
+"blogs."
+msgstr "一个简洁的针对文字爱好者的主题"
+
+#. Author of the plugin/theme
+msgid "Raam Dev"
+msgstr "Raam Dev"
+
+#. Author URI of the plugin/theme
+msgid "http://raamdev.com"
+msgstr "http://raamdev.com"
+
+#. Template Name of the plugin/theme
+msgid "Archives"
+msgstr "归档"
