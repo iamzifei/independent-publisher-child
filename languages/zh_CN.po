@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://wordpress.org/support/theme/independent-"
 "publisher-child\n"
 "POT-Creation-Date: 2014-08-30 04:10:51+00:00\n"
-"PO-Revision-Date: 2014-08-30 14:11+1000\n"
+"PO-Revision-Date: 2014-08-30 14:16+1000\n"
 "Last-Translator: Zifei Gong <iamzifei@gmail.com>\n"
 "Language-Team: Orris <iamzifei@gmail.com>\n"
 "Language: zh_CN\n"
@@ -39,7 +39,7 @@ msgstr "查看%s的所有文章"
 
 #: functions.php:281
 msgid " on "
-msgstr "于"
+msgstr " 发布于 "
 
 #: header.php:43 header.php:48
 msgid "Skip to content"
