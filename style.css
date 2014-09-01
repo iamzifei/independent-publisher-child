@@ -182,6 +182,11 @@ body {
     box-shadow: #fff 0 0 0 5px;
 }
 
+.site-head.full-height,
+.site-head.full-height:after {
+    border: none !important;
+}
+
 body.home .site-head:after {
     z-index: -3;
 }

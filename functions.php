@@ -14,12 +14,10 @@
  * Uncomment the following to add a favicon to your site. You need to add favicon
  * image to the images folder of Independent Publisher Child Theme for this to work.
  */
-/*
 function blog_favicon() {
   echo '<link rel="Shortcut Icon" type="image/x-icon" href="'.get_bloginfo('stylesheet_directory').'/images/favicon.ico" />' . "\n";
 }
 add_action('wp_head', 'blog_favicon');
-*/
 
 /*
  * Add version number to main style.css file with version number that matches the
